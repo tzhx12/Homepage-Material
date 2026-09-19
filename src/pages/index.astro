@@ -1,0 +1,71 @@
+---
+/**
+ * 首页。整页由 modules.config.ts 的数组顺序渲染而成，
+ * 这里不写任何具体内容，只负责「按配置把模块摆出来」。
+ */
+import Shell from '../layouts/Shell.astro';
+import { modules } from '../config/modules.config';
+
+import Profile from '../components/modules/Profile.astro';
+import Links from '../components/modules/Links.astro';
+import Projects from '../components/modules/Projects.astro';
+import Skills from '../components/modules/Skills.astro';
+import Timeline from '../components/modules/Timeline.astro';
+import Friends from '../components/modules/Friends.astro';
+import Stats from '../components/modules/Stats.astro';
+import Notes from '../components/modules/Notes.astro';
+import Gallery from '../components/modules/Gallery.astro';
+
+/**
+ * 模块注册表：配置里的 type 对应到哪个组件。
+ *
+ * 想新增一种模块类型，需要两步：
+ *   1. 在 components/modules/ 下写组件
+ *   2. 在这里登记一行，并在 modules.config.ts 的类型里加上对应的配置形状
+ */
+const registry = {
+  profile: Profile,
+  links: Links,
+  projects: Projects,
+  skills: Skills,
+  timeline: Timeline,
+  friends: Friends,
+  stats: Stats,
+  notes: Notes,
+  gallery: Gallery,
+} as const;
+
+// 过滤掉 enabled: false 的模块，其余保持配置中的顺序
+const activeModules = modules.filter((mod) => mod.enabled !== false);
+---
+
+<Shell>
+  <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
+    {
+      activeModules.map((mod) => {
+        const Component = registry[mod.type];
+
+        if (!Component) {
+          // 配置里写了不存在的 type 时给出明确提示，而不是静默跳过
+          return (
+            <div class="rounded-3xl border border-error bg-error-container p-4 text-sm text-on-error-container sm:col-span-2">
+              未知的模块类型 <code class="font-mono font-bold">"{mod.type}"</code>
+              ，请检查 modules.config.ts，或确认它已在 index.astro 的注册表中登记。
+            </div>
+          );
+        }
+
+        return (
+          <div
+            class:list={[
+              mod.width === 'full' ? 'sm:col-span-2' : '',
+              '[&>section]:h-full',
+            ]}
+          >
+            <Component {...mod} />
+          </div>
+        );
+      })
+    }
+  </div>
+</Shell>

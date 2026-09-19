@@ -1,0 +1,35 @@
+---
+/**
+ * 页脚。
+ */
+import { siteConfig } from '../../config/site.config';
+import Icon from '../ui/Icon.astro';
+
+const year = new Date().getFullYear();
+const range =
+  siteConfig.since && siteConfig.since < year
+    ? `${siteConfig.since} – ${year}`
+    : `${year}`;
+---
+
+<footer
+  class="mx-auto w-full max-w-5xl px-4 pb-10 text-center text-xs text-on-surface-variant sm:px-6"
+>
+  <div
+    class="flex flex-col items-center gap-2 border-t border-outline-variant pt-6"
+  >
+    <p>
+      © {range} {siteConfig.copyright}
+    </p>
+    {
+      siteConfig.showPoweredBy && (
+        <p class="flex items-center gap-1.5">
+          <span>用 Astro 和 Material You 搭建</span>
+          <span class="text-primary" aria-hidden="true">
+            <Icon name="heart" size={12} />
+          </span>
+        </p>
+      )
+    }
+  </div>
+</footer>

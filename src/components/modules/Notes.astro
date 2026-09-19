@@ -1,0 +1,54 @@
+---
+/**
+ * 便签。用强调色容器填充，适合放短句、公告、最近在想的事。
+ */
+import type { NoteItem } from '../../config/modules.config';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+interface Props {
+  title?: string;
+  icon?: string;
+  hint?: string;
+  items: NoteItem[];
+}
+
+const { title = '便签', icon, hint, items } = Astro.props;
+
+const accents = ['primary', 'tertiary', 'secondary'] as const;
+
+const accentClass: Record<string, string> = {
+  primary: 'bg-primary-container text-on-primary-container',
+  tertiary: 'bg-tertiary-container text-on-tertiary-container',
+  secondary: 'bg-secondary-container text-on-secondary-container',
+};
+---
+
+<section class="reveal">
+  <SectionHeader title={title} icon={icon} hint={hint} />
+
+  <div class="flex flex-col gap-2.5">
+    {
+      items.map((note, index) => (
+        <div
+          class:list={[
+            'relative overflow-hidden rounded-3xl px-5 py-4',
+            accentClass[note.accent ?? accents[index % accents.length]],
+          ]}
+        >
+          <span
+            class="pointer-events-none absolute -top-2 -right-1 text-5xl leading-none opacity-10 select-none"
+            aria-hidden="true"
+          >
+            ”
+          </span>
+
+          <p class="relative text-sm leading-relaxed">{note.content}</p>
+
+          {note.date && (
+            <p class="relative mt-2 text-[11px] font-medium opacity-60">{note.date}</p>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</section>

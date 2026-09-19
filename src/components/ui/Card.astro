@@ -1,0 +1,68 @@
+---
+/**
+ * 卡片。Material You 用「表面容器色」表达层级，而不是靠阴影堆叠，
+ * 所以卡片默认是纯色块 + 细边框，悬停时才升一级底色。
+ *
+ * 传了 href 就渲染成 <a>，并自动带上悬停上浮和涟漪反馈。
+ */
+interface Props {
+  /** 传入后卡片整体可点击。 */
+  href?: string;
+  /** 新标签页打开（仅 href 存在时有效）。 */
+  external?: boolean;
+  /** 悬停时是否上浮。 */
+  interactive?: boolean;
+  /** 内边距档位。 */
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  /** 用强调色填充，用于重点内容。 */
+  accent?: 'primary' | 'secondary' | 'tertiary';
+  class?: string;
+}
+
+const {
+  href,
+  external = true,
+  interactive = false,
+  padding = 'md',
+  accent,
+  class: className = '',
+} = Astro.props;
+
+const Tag = href ? 'a' : 'div';
+
+const paddingClass = {
+  none: '',
+  sm: 'p-4',
+  md: 'p-5 sm:p-6',
+  lg: 'p-6 sm:p-8',
+}[padding];
+
+const accentClass = accent
+  ? {
+      primary: '!bg-primary-container !border-transparent text-on-primary-container',
+      secondary:
+        '!bg-secondary-container !border-transparent text-on-secondary-container',
+      tertiary:
+        '!bg-tertiary-container !border-transparent text-on-tertiary-container',
+    }[accent]
+  : '';
+
+const isClickable = Boolean(href) || interactive;
+---
+
+<Tag
+  href={href}
+  target={href && external ? '_blank' : undefined}
+  rel={href && external ? 'noopener noreferrer' : undefined}
+  class:list={[
+    'md-card',
+    'relative block overflow-hidden',
+    paddingClass,
+    accentClass,
+    isClickable && 'md-card-interactive md-state-layer',
+    className,
+  ]}
+  data-ripple={isClickable ? '' : undefined}
+>
+  <slot />
+</Tag>

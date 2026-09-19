@@ -1,0 +1,51 @@
+---
+/**
+ * 数据统计。一排大数字，用来放「写了多少代码」这类信息。
+ */
+import type { StatItem } from '../../config/modules.config';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  title?: string;
+  icon?: string;
+  hint?: string;
+  items: StatItem[];
+}
+
+const { title = '数据', icon, hint, items } = Astro.props;
+
+const accentText = ['text-primary', 'text-tertiary', 'text-secondary'];
+---
+
+<section class="reveal">
+  <SectionHeader title={title} icon={icon} hint={hint} />
+
+  <div class="md-card grid grid-cols-1 gap-1 p-2 sm:grid-cols-3">
+    {
+      items.map((item, index) => (
+        <div class="flex flex-col items-center gap-1 rounded-3xl px-3 py-5 text-center">
+          {item.icon && (
+            <span class="mb-1 text-xl leading-none" aria-hidden="true">
+              <Icon name={item.icon} size={22} />
+            </span>
+          )}
+          <span
+            class:list={[
+              'text-3xl leading-none font-bold tracking-tight',
+              accentText[index % accentText.length],
+            ]}
+          >
+            {item.value}
+            {item.suffix && (
+              <span class="ml-0.5 text-sm font-medium text-on-surface-variant">
+                {item.suffix}
+              </span>
+            )}
+          </span>
+          <span class="text-xs text-on-surface-variant">{item.label}</span>
+        </div>
+      ))
+    }
+  </div>
+</section>

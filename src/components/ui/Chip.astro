@@ -1,0 +1,34 @@
+---
+/**
+ * 药丸标签。用于技术栈、技能、状态这类短文字。
+ */
+interface Props {
+  /** 强调色。不填则使用中性表面色。 */
+  accent?: 'primary' | 'secondary' | 'tertiary' | 'neutral';
+  /** 前置 emoji 或图标名。 */
+  icon?: string;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+import Icon from './Icon.astro';
+
+const { accent = 'neutral', icon, size = 'md', class: className = '' } = Astro.props;
+
+const accentClass = {
+  neutral: '',
+  primary:
+    '!bg-primary-container !text-on-primary-container !border-transparent',
+  secondary:
+    '!bg-secondary-container !text-on-secondary-container !border-transparent',
+  tertiary:
+    '!bg-tertiary-container !text-on-tertiary-container !border-transparent',
+}[accent];
+
+const sizeClass = size === 'sm' ? 'text-xs !px-2.5 !py-1' : '';
+---
+
+<span class:list={['md-chip', accentClass, sizeClass, className]}>
+  {icon && <Icon name={icon} size={size === 'sm' ? 12 : 14} />}
+  <slot />
+</span>

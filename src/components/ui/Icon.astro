@@ -1,0 +1,64 @@
+---
+/**
+ * 图标组件。支持四种写法，自动判断用哪种方式渲染：
+ *
+ *   <Icon name="github" />              内置品牌图标
+ *   <Icon name="sun" />                 内置界面图标
+ *   <Icon name="🌸" />                  任意 emoji
+ *   <Icon name="/logo.png" />           图片（public 下的路径或网络 URL）
+ */
+import { brandIcons, uiIcons } from './brand-icons';
+
+interface Props {
+  name: string;
+  /** 像素尺寸。品牌/界面图标默认 20，emoji 默认 24。 */
+  size?: number;
+  class?: string;
+}
+
+const { name, size, class: className = '' } = Astro.props;
+
+const isImage =
+  name.startsWith('http://') ||
+  name.startsWith('https://') ||
+  name.startsWith('/') ||
+  name.startsWith('data:');
+
+const svgPath = isImage ? undefined : (brandIcons[name] ?? uiIcons[name]);
+const isEmoji = !isImage && !svgPath;
+const pixelSize = size ?? (isEmoji ? 24 : 20);
+---
+
+{
+  isImage ? (
+    <img
+      src={name}
+      width={pixelSize}
+      height={pixelSize}
+      class={`inline-block object-contain ${className}`}
+      alt=""
+      loading="lazy"
+      aria-hidden="true"
+    />
+  ) : svgPath ? (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width={pixelSize}
+      height={pixelSize}
+      fill="currentColor"
+      class={`inline-block shrink-0 ${className}`}
+      aria-hidden="true"
+    >
+      <path d={svgPath} />
+    </svg>
+  ) : (
+    <span
+      class={`inline-block leading-none ${className}`}
+      style={`font-size:${pixelSize}px`}
+      aria-hidden="true"
+    >
+      {name}
+    </span>
+  )
+}

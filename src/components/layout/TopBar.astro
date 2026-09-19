@@ -1,0 +1,88 @@
+---
+/**
+ * 顶部栏。M3 的 top app bar：滚动前是透明表面色，滚动后变成
+ * 半透明毛玻璃并浮起，用状态变化提示「页面已经滚动了」。
+ */
+import { siteConfig } from '../../config/site.config';
+import { themeConfig } from '../../config/theme.config';
+import Icon from '../ui/Icon.astro';
+---
+
+<header
+  data-topbar
+  class="fixed inset-x-0 top-0 z-40 transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)]"
+>
+  <div class="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
+    <a
+      href="/"
+      class="md-state-layer flex items-center gap-2 rounded-full px-3 py-2 font-bold text-on-surface"
+      data-ripple
+    >
+      <span class="text-lg leading-none" aria-hidden="true">
+        <Icon name={siteConfig.favicon} size={22} />
+      </span>
+      <span class="text-base tracking-tight">{siteConfig.title}</span>
+    </a>
+
+    <span class="ml-auto"></span>
+
+    {
+      themeConfig.showThemeSwitcher && (
+        <button
+          type="button"
+          data-theme-toggle
+          class="md-icon-button md-state-layer"
+          data-ripple
+          aria-label="切换主题"
+        >
+          <span class="theme-icon-auto">
+            <Icon name="auto" size={20} />
+          </span>
+          <span class="theme-icon-light hidden">
+            <Icon name="sun" size={20} />
+          </span>
+          <span class="theme-icon-dark hidden">
+            <Icon name="moon" size={20} />
+          </span>
+        </button>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  /* 滚动后：毛玻璃 + 细分割线 */
+  :global([data-topbar][data-scrolled]) {
+    background-color: color-mix(
+      in srgb,
+      var(--md-sys-color-surface) 78%,
+      transparent
+    );
+    backdrop-filter: blur(14px) saturate(1.6);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  /* 三种主题模式对应三个图标，只显示当前那个 */
+  :global([data-theme-toggle][data-mode='auto'] .theme-icon-auto),
+  :global([data-theme-toggle][data-mode='light'] .theme-icon-light),
+  :global([data-theme-toggle][data-mode='dark'] .theme-icon-dark) {
+    display: inline-flex;
+  }
+
+  :global([data-theme-toggle] > span) {
+    display: none;
+  }
+</style>
+
+<script>
+  // 滚动超过 8px 就给顶栏加上毛玻璃状态
+  const bar = document.querySelector('[data-topbar]');
+  if (bar) {
+    const onScroll = () => {
+      bar.toggleAttribute('data-scrolled', window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

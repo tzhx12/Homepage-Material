@@ -1,0 +1,194 @@
+---
+/**
+ * 页面外壳。所有页面都套这一层。
+ *
+ * 这里做三件关键的事：
+ *   1. 把 theme.config.ts 的种子色编译成整套 M3 颜色变量注入 <head>
+ *   2. 把圆角配置编译成形状变量
+ *   3. 在页面绘制前读取本地保存的主题偏好，避免明暗闪烁
+ */
+import { themeConfig, radiusTokens } from '../config/theme.config';
+import { siteConfig } from '../config/site.config';
+import { createM3Theme } from '../lib/m3';
+import '../styles/global.css';
+import '../styles/animations.css';
+import TopBar from '../components/layout/TopBar.astro';
+import Footer from '../components/layout/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+// 由种子色推导整套配色
+const m3 = createM3Theme({ seedColor: themeConfig.seedColor });
+
+// 由圆角配置推导形状令牌
+const shapeCss = `:root {
+${Object.entries(radiusTokens[themeConfig.radius])
+  .map(([key, value]) => `  --md-sys-shape-corner-${key}: ${value};`)
+  .join('\n')}
+}`;
+
+// favicon：emoji 转成内联 SVG，省一次请求
+const faviconHref = siteConfig.favicon.startsWith('/')
+  ? siteConfig.favicon
+  : `data:image/svg+xml,${encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${siteConfig.favicon}</text></svg>`
+    )}`;
+
+const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
+const pageDescription = description ?? siteConfig.description;
+---
+
+<!doctype html>
+<html
+  lang={siteConfig.lang}
+  data-motion={themeConfig.motion ? 'on' : 'off'}
+  data-hover-lift={themeConfig.hoverLift ? 'on' : 'off'}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={siteConfig.keywords.join(', ')} />
+    <link rel="icon" href={faviconHref} />
+
+    <!-- 社交分享卡片 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- 绘制前同步读取主题偏好，避免明暗闪烁 -->
+    <script is:inline>
+      (function () {
+        // 标记 JS 可用。入场动画的初始隐藏状态依赖这个标记，
+        // 没有它就不会隐藏内容，禁用 JS 时页面依然完整可读。
+        document.documentElement.dataset.js = 'on';
+        try {
+          var saved = localStorage.getItem('theme-mode');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.dataset.theme = saved;
+          }
+        } catch (e) {
+          /* 隐私模式下 localStorage 可能不可用，忽略即可 */
+        }
+      })();
+    </script>
+
+    <!-- 由种子色推导的 M3 颜色变量 -->
+    <style is:global set:html={m3.css} />
+    <!-- 由圆角配置推导的形状变量 -->
+    <style is:global set:html={shapeCss} />
+  </head>
+
+  <body class="min-h-dvh antialiased">
+    <!-- 背景光斑。关掉 backgroundMesh 就只剩纯色背景 -->
+    {themeConfig.backgroundMesh && <div class="md-mesh" aria-hidden="true"></div>}
+
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary"
+    >
+      跳到主要内容
+    </a>
+
+    <TopBar />
+
+    <main id="main" class="mx-auto w-full max-w-5xl px-4 pt-24 pb-16 sm:px-6">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // ---- 主题切换：auto → light → dark 循环 ----
+      const root = document.documentElement;
+      const MODES = ['auto', 'light', 'dark'] as const;
+      type Mode = (typeof MODES)[number];
+
+      function currentMode(): Mode {
+        const saved = localStorage.getItem('theme-mode');
+        return (MODES as readonly string[]).includes(saved ?? '')
+          ? (saved as Mode)
+          : 'auto';
+      }
+
+      function applyMode(mode: Mode) {
+        if (mode === 'auto') {
+          root.removeAttribute('data-theme');
+          localStorage.removeItem('theme-mode');
+        } else {
+          root.dataset.theme = mode;
+          localStorage.setItem('theme-mode', mode);
+        }
+      }
+
+      const toggle =
+        document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+      function syncToggle(mode: Mode = currentMode()) {
+        if (!toggle) return;
+        const next = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
+        const text = { auto: '跟随系统', light: '浅色', dark: '深色' }[next];
+        toggle.setAttribute('aria-label', `主题：${text}，点击切换`);
+        toggle.dataset.mode = mode;
+      }
+
+      toggle?.addEventListener('click', () => {
+        const next = MODES[(MODES.indexOf(currentMode()) + 1) % MODES.length];
+        applyMode(next);
+        syncToggle(next);
+      });
+
+      syncToggle();
+
+      // ---- 滚动进入视口时淡入 ----
+      const reveals = document.querySelectorAll('.reveal');
+      if (reveals.length) {
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  io.unobserve(entry.target);
+                }
+              }
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+          );
+          reveals.forEach((el) => io.observe(el));
+        } else {
+          // 浏览器不支持时直接全部显示，不留白屏
+          reveals.forEach((el) => el.classList.add('is-visible'));
+        }
+      }
+
+      // ---- 点击涟漪：M3 的触感反馈 ----
+      document.addEventListener('pointerdown', (event) => {
+        const target = (event.target as HTMLElement)?.closest<HTMLElement>(
+          '[data-ripple]'
+        );
+        if (!target) return;
+        if (root.dataset.motion === 'off') return;
+
+        const rect = target.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const ripple = document.createElement('span');
+        ripple.className = 'md-ripple';
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+        ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+        target.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
+      });
+    </script>
+  </body>
+</html>

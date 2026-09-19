@@ -1,26 +1,30 @@
-# 操作系统生成的文件
-.DS_Store
-.DS_Store?
-._*
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
+# 依赖
+node_modules/
 
-# 编辑器和 IDE
+# 构建产物
+dist/
+.astro/
+
+# 日志
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 环境变量（永远不要提交）
+.env
+.env.local
+.env.production
+*.pem
+*.key
+
+# 编辑器与操作系统
 .vscode/*
 !.vscode/extensions.json
 .idea/
-*.swp
-*.swo
-*~
+.DS_Store
+.DS_Store?
+Thumbs.db
+Desktop.ini
 
-# 日志和临时文件
-*.log
-*.tmp
-
-# 环境变量和密钥（千万别提交这些）
-.env
-.env.local
-*.pem
-*.key
+# ZCode 插件数据
+.mimosa/

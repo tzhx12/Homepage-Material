@@ -1,0 +1,92 @@
+---
+/**
+ * 时间线。左侧一条竖线串起节点，最新的在上面时读起来最自然，
+ * 所以按配置顺序原样渲染，需要倒序的话在配置里调整即可。
+ */
+import type { TimelineItem } from '../../config/modules.config';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  title?: string;
+  icon?: string;
+  hint?: string;
+  items: TimelineItem[];
+}
+
+const { title = '时间线', icon, hint, items } = Astro.props;
+
+const isExternal = (href?: string) => Boolean(href?.startsWith('http'));
+---
+
+<section class="reveal">
+  <SectionHeader title={title} icon={icon} hint={hint} />
+
+  <ol class="relative flex flex-col gap-1">
+    {
+      items.map((item, index) => {
+        const isLast = index === items.length - 1;
+        const Tag = item.href ? 'a' : 'div';
+
+        return (
+          <li class="relative flex gap-3">
+            {/* 竖线 + 节点 */}
+            <div class="relative flex w-5 shrink-0 justify-center">
+              {!isLast && (
+                <span
+                  class="absolute top-8 bottom-0 w-0.5 rounded-full bg-outline-variant"
+                  aria-hidden="true"
+                />
+              )}
+              <span
+                class="relative z-10 mt-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-primary bg-surface text-[10px]"
+                aria-hidden="true"
+              >
+                {item.icon ? (
+                  <Icon name={item.icon} size={11} />
+                ) : (
+                  <span class="h-1.5 w-1.5 rounded-full bg-primary" />
+                )}
+              </span>
+            </div>
+
+            <Tag
+              href={item.href}
+              target={item.href && isExternal(item.href) ? '_blank' : undefined}
+              rel={item.href && isExternal(item.href) ? 'noopener noreferrer' : undefined}
+              class:list={[
+                'mb-3 min-w-0 flex-1 rounded-3xl px-4 py-3',
+                item.href &&
+                  'md-state-layer md-card-interactive bg-surface-container-low',
+              ]}
+              data-ripple={item.href ? '' : undefined}
+            >
+              <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span class="text-[11px] font-semibold tracking-wide text-primary">
+                  {item.date}
+                </span>
+                <h3 class="text-sm font-bold text-on-surface">{item.title}</h3>
+              </div>
+
+              {item.description && (
+                <p class="mt-1 text-xs leading-relaxed text-on-surface-variant">
+                  {item.description}
+                </p>
+              )}
+
+              {item.tags && item.tags.length > 0 && (
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  {item.tags.map((tag) => (
+                    <span class="rounded-full bg-surface-container-high px-2 py-0.5 text-[10px] text-on-surface-variant">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </Tag>
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>

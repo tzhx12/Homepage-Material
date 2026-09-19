@@ -1,0 +1,24 @@
+---
+import Shell from '../layouts/Shell.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<Shell title="页面走丢了">
+  <div class="reveal is-visible mx-auto max-w-md py-16 text-center">
+    <div class="float mb-6 text-7xl" aria-hidden="true">🍥</div>
+
+    <h1 class="text-3xl font-bold tracking-tight text-on-surface">404</h1>
+    <p class="mt-2 text-sm text-on-surface-variant">
+      这个页面好像不存在，或者被搬走了。
+    </p>
+
+    <a
+      href="/"
+      class="md-button md-button-filled md-state-layer mt-7 !px-6"
+      data-ripple
+    >
+      <Icon name="arrowUp" size={16} class="-rotate-90" />
+      <span>回到首页</span>
+    </a>
+  </div>
+</Shell>

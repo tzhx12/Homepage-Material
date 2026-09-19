@@ -1,0 +1,134 @@
+/* ============================================================
+ * 入场与装饰动效
+ * ========================================================== */
+
+/* 滚动进入视口时的上浮淡入。
+   由 Shell.astro 的脚本用 IntersectionObserver 添加 .is-visible 触发。
+
+   注意选择器前面挂了 [data-js='on']：只有在 JS 可用时才会把内容
+   设成透明。这样禁用 JS、或脚本加载失败时，页面依然完整可读，
+   而不是一片空白。 */
+:root[data-js='on'] .reveal {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity var(--md-sys-motion-duration-extra-long)
+      var(--md-sys-motion-easing-emphasized-decelerate),
+    transform var(--md-sys-motion-duration-extra-long)
+      var(--md-sys-motion-easing-emphasized-decelerate);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+:root[data-js='on'] .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 页面首屏的入场：从下方轻微弹入 */
+.enter {
+  opacity: 0;
+  transform: translateY(0.75rem) scale(0.98);
+  animation: enter-in var(--md-sys-motion-duration-extra-long)
+    var(--md-sys-motion-easing-emphasized-decelerate) forwards;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+@keyframes enter-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 悬停时轻微摇摆，用在头像、图标这类小元素上 */
+.wiggle {
+  transition: transform var(--md-sys-motion-duration-medium)
+    var(--md-sys-motion-easing-spring);
+}
+
+.wiggle:hover {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+/* 缓慢浮动，用在装饰性元素上 */
+.float {
+  animation: float-y 5s var(--md-sys-motion-easing-standard) infinite;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.4rem);
+  }
+}
+
+/* 星星闪烁 */
+.twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0ms);
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* 状态点的呼吸光圈，用在「在做什么」徽章上 */
+.pulse-dot {
+  position: relative;
+}
+
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: inherit;
+  animation: pulse-ring 2.2s var(--md-sys-motion-easing-standard) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* 头像外圈的柔和光环 */
+.avatar-ring::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--md-sys-color-primary),
+    var(--md-sys-color-tertiary),
+    var(--md-sys-color-secondary),
+    var(--md-sys-color-primary)
+  );
+  opacity: 0.35;
+  z-index: -1;
+  animation: ring-spin 12s linear infinite;
+}
+
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

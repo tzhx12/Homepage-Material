@@ -1,0 +1,132 @@
+---
+/**
+ * 个人名片。整页的门面，也是唯一一个内容直接来自
+ * profile.config.ts 的模块。
+ */
+import { profileConfig } from '../../config/profile.config';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  showBio?: boolean;
+  showMeta?: boolean;
+}
+
+const { showBio = true, showMeta = true } = Astro.props;
+
+const { name, avatar, tagline, bio, status, location, socials } = profileConfig;
+
+const avatarIsImage =
+  avatar.startsWith('/') ||
+  avatar.startsWith('http://') ||
+  avatar.startsWith('https://') ||
+  avatar.startsWith('data:');
+---
+
+<section class="reveal">
+  <div class="md-card relative overflow-hidden p-6 sm:p-9">
+    <!-- 角落装饰 -->
+    <span
+      class="twinkle pointer-events-none absolute top-5 right-6 text-2xl opacity-40 select-none"
+      aria-hidden="true">✦</span
+    >
+    <span
+      class="twinkle pointer-events-none absolute top-14 right-16 text-sm opacity-30 select-none"
+      style="--twinkle-delay:900ms"
+      aria-hidden="true">✧</span
+    >
+
+    <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+      <!-- 头像 -->
+      <div class="avatar-ring relative shrink-0">
+        {
+          avatarIsImage ? (
+            <img
+              src={avatar}
+              alt={name}
+              width="112"
+              height="112"
+              class="wiggle h-24 w-24 rounded-full border-4 border-surface-container-lowest object-cover sm:h-28 sm:w-28"
+            />
+          ) : (
+            <span
+              class="wiggle flex h-24 w-24 items-center justify-center rounded-full border-4 border-surface-container-lowest bg-primary-container text-5xl sm:h-28 sm:w-28"
+              aria-hidden="true"
+            >
+              {avatar}
+            </span>
+          )
+        }
+      </div>
+
+      <!-- 文字信息 -->
+      <div class="min-w-0 flex-1 text-center sm:text-left">
+        <div
+          class="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-3"
+        >
+          <h1 class="text-2xl font-bold tracking-tight text-on-surface sm:text-3xl">
+            {name}
+          </h1>
+
+          {
+            status && (
+              <span class="md-chip !bg-primary-container !text-on-primary-container !border-transparent">
+                <span
+                  class="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-primary"
+                  aria-hidden="true"
+                />
+                {status}
+              </span>
+            )
+          }
+        </div>
+
+        {tagline && <p class="mt-1.5 text-base text-on-surface-variant">{tagline}</p>}
+
+        {
+          showBio && bio && (
+            <p class="mt-4 text-sm leading-relaxed whitespace-pre-line text-on-surface-variant">
+              {bio}
+            </p>
+          )
+        }
+
+        {
+          showMeta && location && (
+            <p class="mt-3 flex items-center justify-center gap-1.5 text-xs text-on-surface-variant sm:justify-start">
+              <Icon name="location" size={14} />
+              <span>{location}</span>
+            </p>
+          )
+        }
+
+        <!-- 社交入口 -->
+        {
+          socials.length > 0 && (
+            <div class="mt-5 flex flex-wrap justify-center gap-2 sm:justify-start">
+              {socials.map((social) => (
+                <a
+                  href={social.href}
+                  target={social.href.startsWith('http') ? '_blank' : undefined}
+                  rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  class:list={[
+                    'md-button md-state-layer !px-4 !py-2 !text-xs',
+                    !social.accent && 'md-button-tonal',
+                  ]}
+                  style={
+                    social.accent
+                      ? undefined
+                      : 'background-color:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)'
+                  }
+                  data-ripple
+                >
+                  <Icon name={social.icon} size={16} />
+                  <span>{social.label}</span>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

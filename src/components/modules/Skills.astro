@@ -1,0 +1,58 @@
+---
+/**
+ * 技能。支持分组，每项可以用 level（1-5）显示熟练度圆点。
+ */
+import type { SkillGroup } from '../../config/modules.config';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  title?: string;
+  icon?: string;
+  hint?: string;
+  groups: SkillGroup[];
+}
+
+const { title = '技能', icon, hint, groups } = Astro.props;
+---
+
+<section class="reveal">
+  <SectionHeader title={title} icon={icon} hint={hint} />
+
+  <div class="flex flex-col gap-5">
+    {
+      groups.map((group) => (
+        <div>
+          <p class="mb-2.5 text-xs font-semibold tracking-wide text-on-surface-variant uppercase">
+            {group.category}
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            {group.items.map((skill) => (
+              <span class="md-chip !gap-2 !py-1.5">
+                {skill.icon && <Icon name={skill.icon} size={14} />}
+                <span>{skill.name}</span>
+
+                {typeof skill.level === 'number' && (
+                  <span class="ml-0.5 flex items-center gap-0.5" aria-label={`熟练度 ${skill.level} / 5`}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <span
+                        class:list={[
+                          'h-1.5 w-1.5 rounded-full',
+                          index < (skill.level ?? 0)
+                            ? 'bg-primary'
+                            : 'bg-outline-variant',
+                        ]}
+                        aria-hidden="true"
+                      />
+                    ))}
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

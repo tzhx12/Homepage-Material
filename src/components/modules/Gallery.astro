@@ -1,0 +1,89 @@
+---
+/**
+ * 图片墙。src 可以是图片路径，也可以直接写 emoji 当作占位，
+ * 方便还没准备好图的时候先把版式定下来。
+ */
+import type { GalleryItem } from '../../config/modules.config';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+interface Props {
+  title?: string;
+  icon?: string;
+  hint?: string;
+  items: GalleryItem[];
+  columns?: 2 | 3;
+}
+
+const {
+  title = '相册',
+  icon,
+  hint,
+  items,
+  columns = 3,
+} = Astro.props;
+
+const isImage = (src: string) =>
+  src.startsWith('/') ||
+  src.startsWith('http://') ||
+  src.startsWith('https://') ||
+  src.startsWith('data:');
+
+const colClass = columns === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3';
+
+const accentBg = [
+  'bg-primary-container',
+  'bg-tertiary-container',
+  'bg-secondary-container',
+];
+---
+
+<section class="reveal">
+  <SectionHeader title={title} icon={icon} hint={hint} />
+
+  <div class:list={['grid grid-cols-2 gap-2.5', colClass]}>
+    {
+      items.map((item, index) => {
+        const Tag = item.href ? 'a' : 'div';
+
+        return (
+          <Tag
+            href={item.href}
+            target={item.href?.startsWith('http') ? '_blank' : undefined}
+            rel={item.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+            class:list={[
+              'group md-card relative aspect-4/3 overflow-hidden !p-0',
+              item.href && 'md-card-interactive md-state-layer',
+            ]}
+            data-ripple={item.href ? '' : undefined}
+          >
+            {isImage(item.src) ? (
+              <img
+                src={item.src}
+                alt={item.alt}
+                class="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-105"
+                loading="lazy"
+              />
+            ) : (
+              <span
+                class:list={[
+                  'flex h-full w-full items-center justify-center text-5xl transition-transform duration-500 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-110',
+                  accentBg[index % accentBg.length],
+                ]}
+                role="img"
+                aria-label={item.alt}
+              >
+                {item.src}
+              </span>
+            )}
+
+            {item.caption && (
+              <span class="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent px-3 pt-8 pb-2.5 text-xs font-medium text-white">
+                {item.caption}
+              </span>
+            )}
+          </Tag>
+        );
+      })
+    }
+  </div>
+</section>

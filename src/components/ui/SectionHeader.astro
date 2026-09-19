@@ -1,0 +1,32 @@
+---
+/**
+ * 模块标题。每个模块顶部的「图标 + 标题 + 右侧小字说明」。
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  /** emoji 或内置图标名。 */
+  icon?: string;
+  /** 标题右侧的补充说明。 */
+  hint?: string;
+}
+
+const { title, icon, hint } = Astro.props;
+---
+
+<div class="mb-4 flex items-baseline gap-2.5">
+  {
+    icon && (
+      <span class="text-lg leading-none" aria-hidden="true">
+        <Icon name={icon} size={20} />
+      </span>
+    )
+  }
+  <h2 class="text-lg font-bold tracking-tight text-on-surface">{title}</h2>
+  {
+    hint && (
+      <span class="ml-auto shrink-0 text-xs text-on-surface-variant">{hint}</span>
+    )
+  }
+</div>
