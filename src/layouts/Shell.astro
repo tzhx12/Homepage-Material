@@ -71,6 +71,17 @@ const pageDescription = description ?? siteConfig.description;
         // 标记 JS 可用。入场动画的初始隐藏状态依赖这个标记，
         // 没有它就不会隐藏内容，禁用 JS 时页面依然完整可读。
         document.documentElement.dataset.js = 'on';
+
+        // 兜底：真正的显示逻辑在页面底部那个独立脚本里。万一它没能
+        // 加载成功（网络抖动、被扩展拦截、CSP 限制等），内容会一直
+        // 停在 opacity: 0。这里设个超时，到点还没等它报到就撤销标记，
+        // 让内容照常显示。
+        window.setTimeout(function () {
+          if (document.documentElement.dataset.reveal !== 'on') {
+            document.documentElement.removeAttribute('data-js');
+          }
+        }, 1500);
+
         try {
           var saved = localStorage.getItem('theme-mode');
           if (saved === 'light' || saved === 'dark') {
@@ -150,6 +161,9 @@ const pageDescription = description ?? siteConfig.description;
       syncToggle();
 
       // ---- 滚动进入视口时淡入 ----
+      // 先向头部脚本报到，撤销它的兜底超时
+      document.documentElement.dataset.reveal = 'on';
+
       const reveals = document.querySelectorAll('.reveal');
       if (reveals.length) {
         if ('IntersectionObserver' in window) {
