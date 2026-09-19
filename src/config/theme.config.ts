@@ -89,14 +89,12 @@ export const themeConfig = {
     /**
      * 背景图，仅当 mode 为 'image' 时生效。
      *
-     * 仓库里没有附带背景图 —— 请用自己的图，放进 public/ 目录后
-     * 把这里改成对应文件名（例如 '/my-background.jpg'）。
+     * 网络地址和本地图片都支持：
+     *   'https://example.com/wallpaper.jpg'   网络地址，仓库里不用存图片文件
+     *   '/my-background.jpg'                  public/ 目录下的本地图片
      *
-     * 建议宽度 1600px 左右、控制在 500KB 以内，原图太大可以压缩：
+     * 建议宽度 1600px 左右、控制在 500KB 以内。本地图片太大的话可以压缩：
      *   ffmpeg -i 原图.jpg -vf "scale=1600:-2" -q:v 4 public/背景图.jpg
-     *
-     * 注意：只放你自己拥有版权的图片。来源不明的图（尤其是动漫
-     * 同人作品）不要提交到公开仓库。
      */
     image: '/background.jpg',
 

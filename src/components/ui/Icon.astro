@@ -8,6 +8,7 @@
  *   <Icon name="/logo.png" />           图片（public 下的路径或网络 URL）
  */
 import { brandIcons, uiIcons } from './brand-icons';
+import { isImageSource } from '../../lib/media';
 
 interface Props {
   name: string;
@@ -18,11 +19,7 @@ interface Props {
 
 const { name, size, class: className = '' } = Astro.props;
 
-const isImage =
-  name.startsWith('http://') ||
-  name.startsWith('https://') ||
-  name.startsWith('/') ||
-  name.startsWith('data:');
+const isImage = isImageSource(name);
 
 const svgPath = isImage ? undefined : (brandIcons[name] ?? uiIcons[name]);
 const isEmoji = !isImage && !svgPath;

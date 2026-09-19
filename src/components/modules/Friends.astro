@@ -5,6 +5,7 @@
 import type { FriendItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
 import { ACCENT_CONTAINER, resolveAccent } from '../../lib/accent';
+import { isImageSource } from '../../lib/media';
 
 interface Props {
   title?: string;
@@ -14,12 +15,6 @@ interface Props {
 }
 
 const { title = '友链', icon, hint, items } = Astro.props;
-
-const isImage = (src: string) =>
-  src.startsWith('/') ||
-  src.startsWith('http://') ||
-  src.startsWith('https://') ||
-  src.startsWith('data:');
 ---
 
 <section class="reveal">
@@ -35,7 +30,7 @@ const isImage = (src: string) =>
           class="md-card md-card-interactive md-state-layer flex items-center gap-3 !p-3.5"
           data-ripple
         >
-          {isImage(friend.avatar) ? (
+          {isImageSource(friend.avatar) ? (
             <img
               src={friend.avatar}
               alt=""

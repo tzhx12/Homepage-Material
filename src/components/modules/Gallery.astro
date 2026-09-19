@@ -6,6 +6,7 @@
 import type { GalleryItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
 import { ACCENT_CONTAINER, defaultAccent } from '../../lib/accent';
+import { isImageSource } from '../../lib/media';
 
 interface Props {
   title?: string;
@@ -22,12 +23,6 @@ const {
   items,
   columns = 3,
 } = Astro.props;
-
-const isImage = (src: string) =>
-  src.startsWith('/') ||
-  src.startsWith('http://') ||
-  src.startsWith('https://') ||
-  src.startsWith('data:');
 
 const colClass = columns === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3';
 
@@ -54,7 +49,7 @@ const placeholderBg = ACCENT_CONTAINER[defaultAccent];
             ]}
             data-ripple={item.href ? '' : undefined}
           >
-            {isImage(item.src) ? (
+            {isImageSource(item.src) ? (
               <img
                 src={item.src}
                 alt={item.alt}

@@ -6,6 +6,7 @@
 import { profileConfig } from '../../config/profile.config';
 import Icon from '../ui/Icon.astro';
 import { ACCENT_CONTAINER, resolveAccent } from '../../lib/accent';
+import { isImageSource } from '../../lib/media';
 
 interface Props {
   showBio?: boolean;
@@ -16,11 +17,7 @@ const { showBio = true, showMeta = true } = Astro.props;
 
 const { name, avatar, tagline, bio, status, location, socials } = profileConfig;
 
-const avatarIsImage =
-  avatar.startsWith('/') ||
-  avatar.startsWith('http://') ||
-  avatar.startsWith('https://') ||
-  avatar.startsWith('data:');
+const avatarIsImage = isImageSource(avatar);
 ---
 
 <section class="reveal">

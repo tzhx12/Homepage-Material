@@ -6,15 +6,12 @@
 import { siteConfig } from '../../config/site.config';
 import { profileConfig } from '../../config/profile.config';
 import { themeConfig } from '../../config/theme.config';
+import { isImageSource } from '../../lib/media';
 import Icon from '../ui/Icon.astro';
 
 // 站点标识直接用头像。头像可以是图片路径、网络地址或 emoji。
 const logo = profileConfig.avatar;
-const logoIsImage =
-  logo.startsWith('/') ||
-  logo.startsWith('http://') ||
-  logo.startsWith('https://') ||
-  logo.startsWith('data:');
+const logoIsImage = isImageSource(logo);
 ---
 
 <header

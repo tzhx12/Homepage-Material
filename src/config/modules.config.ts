@@ -76,6 +76,7 @@ export interface TimelineItem {
 
 export interface FriendItem {
   name: string;
+  /** 头像。网络地址、public/ 下的本地图片、或 emoji 都支持。 */
   avatar: string;
   description?: string;
   href: string;
@@ -102,7 +103,10 @@ export interface NoteItem {
 
 export interface GalleryItem {
   /**
-   * 图片地址：public/ 下的路径（如 '/images/photo.jpg'）或网络 URL。
+   * 图片地址。网络地址和本地图片都支持：
+   *   'https://example.com/photo.jpg'   网络地址，仓库里不用存图片文件
+   *   '/images/photo.jpg'               public/images/ 下的本地图片
+   *
    * 还没准备好图时可以直接写 emoji 当占位，版式先定下来。
    */
   src: string;
@@ -300,8 +304,9 @@ export const modules: ModuleConfig[] = [
     width: 'full',
     columns: 3,
     items: [
-      // src 填图片路径（如 '/images/photo.jpg'）或 emoji 占位。
-      // 仓库里没有附带任何图片，请换成你自己的。
+      // src 支持网络地址（如 'https://example.com/photo.jpg'）
+      // 或 public/ 下的本地图片（如 '/images/photo.jpg'），
+      // 也可以先用 emoji 占位把版式定下来。
       { src: '🌸', alt: '占位图一', caption: '换成你自己的图片' },
       { src: '🌙', alt: '占位图二', caption: '换成你自己的图片' },
       { src: '☕', alt: '占位图三', caption: '换成你自己的图片' },

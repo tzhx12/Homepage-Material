@@ -10,6 +10,7 @@
 import { themeConfig, radiusTokens } from '../config/theme.config';
 import { siteConfig } from '../config/site.config';
 import { createM3Theme } from '../lib/m3';
+import { isImageSource, toCssUrl } from '../lib/media';
 import '../styles/global.css';
 import '../styles/animations.css';
 import TopBar from '../components/layout/TopBar.astro';
@@ -34,12 +35,7 @@ ${Object.entries(radiusTokens[themeConfig.radius])
 
 // favicon 支持三种写法：'/' 开头的本地路径、http(s) 网络地址，
 // 或 emoji（转成内联 SVG，省一次请求）
-const faviconIsUrl =
-  siteConfig.favicon.startsWith('/') ||
-  siteConfig.favicon.startsWith('http://') ||
-  siteConfig.favicon.startsWith('https://');
-
-const faviconHref = faviconIsUrl
+const faviconHref = isImageSource(siteConfig.favicon)
   ? siteConfig.favicon
   : `data:image/svg+xml,${encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${siteConfig.favicon}</text></svg>`
@@ -52,7 +48,7 @@ const backgroundCss = `:root {
   --md-backdrop-blur: ${bg.blur}px;
   --md-mica-opacity: ${bg.overlayOpacity};
   --md-card-blur: ${bg.cardBlur}px;
-${bg.mode === 'image' ? `  --md-backdrop-image: url('${bg.image}');` : ''}
+${bg.mode === 'image' ? `  --md-backdrop-image: ${toCssUrl(bg.image)};` : ''}
 }`;
 
 const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;

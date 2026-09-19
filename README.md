@@ -124,11 +124,28 @@ Mica 是 Windows 11 引入的材质：把壁纸重度模糊，再压一层跟随
 
 ### 加自己的图片
 
-头像和站点图标默认引用 GitHub 头像地址，所以仓库里没有任何图片文件。想放自己的图有三处：
+**所有放图片的地方都支持网络地址**——不想往仓库里存文件的话，直接用图床或 CDN 的链接就行。
 
-- **头像**：`profile.config.ts` 的 `avatar`。它同时被顶部栏当作站点标识，换一处就够了。支持网络地址、`public/` 下的本地图片，或 emoji。
-- **站点图标**：`site.config.ts` 的 `favicon`。同样支持网络地址、本地图片或 emoji。
-- **相册与其他插图**：图片放进 `public/images/`，然后在 `modules.config.ts` 的 `gallery` 模块里按 `{ src: '/images/xxx.jpg', alt: '描述', caption: '图注' }` 引用。图片会自动裁成 4:3，带悬停放大效果。详见 `public/images/README.md`。
+| 位置 | 配置项 |
+| --- | --- |
+| 头像与站点标识 | `profile.config.ts` 的 `avatar`（顶部栏和名片共用） |
+| 站点图标 | `site.config.ts` 的 `favicon` |
+| 页面背景 | `theme.config.ts` 的 `background.image`（需同时把 `mode` 设为 `'image'`） |
+| 相册 | `modules.config.ts` 里 `gallery` 各项的 `src` |
+| 友链头像 | `modules.config.ts` 里 `friends` 各项的 `avatar` |
+| 各处小图标 | 各模块的 `icon` 字段 |
+
+每个位置都接受这几种写法：
+
+```ts
+'https://example.com/photo.jpg'   // 网络地址，仓库里不用存文件
+'/images/photo.jpg'               // public/ 目录下的本地文件
+'🐣'                              // emoji（图标类字段支持）
+```
+
+图片由访问者的浏览器直接去取，构建时不做下载也不做校验——用图床、CDN 还是本地文件都行，只是本地文件不受外部服务可用性影响。
+
+相册的图片会自动裁成 4:3 并带悬停放大效果，横构图效果最好。详见 `public/images/README.md`。
 
 ### 从图片取色
 
