@@ -5,6 +5,7 @@
 import type { LinkItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
 import Icon from '../ui/Icon.astro';
+import { ACCENT_CONTAINER, resolveAccent } from '../../lib/accent';
 
 interface Props {
   title?: string;
@@ -15,16 +16,7 @@ interface Props {
 
 const { title = '链接', icon, hint, items } = Astro.props;
 
-const accentClasses: Record<string, string> = {
-  primary: 'bg-primary-container text-on-primary-container',
-  secondary: 'bg-secondary-container text-on-secondary-container',
-  tertiary: 'bg-tertiary-container text-on-tertiary-container',
-};
-
 const isExternal = (href: string) => href.startsWith('http');
-
-/** 按顺序循环分配强调色，让一排链接有节奏感 */
-const accents = ['primary', 'tertiary', 'secondary'];
 ---
 
 <section class="reveal">
@@ -32,7 +24,7 @@ const accents = ['primary', 'tertiary', 'secondary'];
 
   <div class="flex flex-col gap-2.5">
     {
-      items.map((item, index) => (
+      items.map((item) => (
         <a
           href={item.href}
           target={isExternal(item.href) ? '_blank' : undefined}
@@ -43,7 +35,8 @@ const accents = ['primary', 'tertiary', 'secondary'];
           <span
             class:list={[
               'flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl',
-              accentClasses[item.accent ?? accents[index % accents.length]],
+              // 统一用同一个颜色角色，单个条目可用 accent 字段覆盖
+              ACCENT_CONTAINER[resolveAccent(item.accent)],
             ]}
           >
             <Icon name={item.icon} size={18} />

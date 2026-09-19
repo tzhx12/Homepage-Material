@@ -26,6 +26,11 @@ export interface LinkItem {
   label: string;
   description?: string;
   href: string;
+  /**
+   * 可选的强调色覆盖。默认不填 —— 全站共用 theme.config.ts 里
+   * accentRole 指定的同一个角色，保证同类元素颜色一致。
+   * 只有在确实要单独强调某个条目时才填。
+   */
   accent?: 'primary' | 'secondary' | 'tertiary';
 }
 
@@ -74,6 +79,8 @@ export interface FriendItem {
   avatar: string;
   description?: string;
   href: string;
+  /** 可选的强调色覆盖，默认跟随 theme.config.ts 的 accentRole。 */
+  accent?: 'primary' | 'secondary' | 'tertiary';
 }
 
 export interface StatItem {
@@ -82,12 +89,14 @@ export interface StatItem {
   /** 数值后缀，如 '+' '个' '小时'。 */
   suffix?: string;
   icon?: string;
+  /** 可选的强调色覆盖，默认跟随 theme.config.ts 的 accentRole。 */
+  accent?: 'primary' | 'secondary' | 'tertiary';
 }
 
 export interface NoteItem {
   content: string;
   date?: string;
-  /** 便签颜色，会使用对应的容器色。 */
+  /** 可选的强调色覆盖，默认跟随 theme.config.ts 的 accentRole。 */
   accent?: 'primary' | 'secondary' | 'tertiary';
 }
 
@@ -160,21 +169,18 @@ export const modules: ModuleConfig[] = [
         label: 'GitHub',
         description: '@tzhx12',
         href: 'https://github.com/tzhx12',
-        accent: 'primary',
       },
       {
         icon: 'mail',
         label: 'Email',
         description: '随时来信',
         href: 'mailto:122715481+tzhx12@users.noreply.github.com',
-        accent: 'tertiary',
       },
       {
         icon: 'link',
         label: '简历',
         description: '我的经历',
         href: '#',
-        accent: 'secondary',
       },
     ],
   },
@@ -265,7 +271,6 @@ export const modules: ModuleConfig[] = [
       {
         content: '把喜欢的事情一件件做出来，就已经很厉害了。',
         date: '2026.09',
-        accent: 'primary',
       },
     ],
   },

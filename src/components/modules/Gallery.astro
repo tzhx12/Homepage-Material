@@ -5,6 +5,7 @@
  */
 import type { GalleryItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
+import { ACCENT_CONTAINER, defaultAccent } from '../../lib/accent';
 
 interface Props {
   title?: string;
@@ -30,11 +31,8 @@ const isImage = (src: string) =>
 
 const colClass = columns === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3';
 
-const accentBg = [
-  'bg-primary-container',
-  'bg-tertiary-container',
-  'bg-secondary-container',
-];
+/** emoji 占位时的底色：和全站共用同一个强调色角色。 */
+const placeholderBg = ACCENT_CONTAINER[defaultAccent];
 ---
 
 <section class="reveal">
@@ -67,7 +65,7 @@ const accentBg = [
               <span
                 class:list={[
                   'flex h-full w-full items-center justify-center text-5xl transition-transform duration-500 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-110',
-                  accentBg[index % accentBg.length],
+                  placeholderBg,
                 ]}
                 role="img"
                 aria-label={item.alt}

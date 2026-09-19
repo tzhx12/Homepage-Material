@@ -9,6 +9,9 @@
 export type ThemeMode = 'auto' | 'light' | 'dark';
 export type RadiusScale = 'small' | 'medium' | 'large';
 
+/** 强调色角色。见下面 accentRole 的说明。 */
+export type AccentRole = 'primary' | 'secondary' | 'tertiary';
+
 /**
  * 页面背景的三种形态：
  *   'image'  图片背景 + Mica 材质覆盖层（默认）
@@ -50,6 +53,21 @@ export const themeConfig = {
 
   /** 卡片悬停时是否轻微上浮。 */
   hoverLift: true,
+
+  /**
+   * 强调色角色 —— 图标底色、便签底色、数字颜色统一用它。
+   *
+   * Material You 的基本规则是「同一类元素用同一个颜色角色」：一排图标
+   * 各用各的容器色，视觉上就不像同一套系统生成的了。所以这里只设一个值，
+   * 全站共用，从结构上保证一致。
+   *
+   *   'primary'   主题主色，最醒目（默认）
+   *   'secondary' 更含蓄，适合不想太抢眼的设计
+   *   'tertiary'  互补色，用来制造对比
+   *
+   * 单个条目仍可在配置里用 accent 字段单独覆盖，用于确实需要强调的情况。
+   */
+  accentRole: 'primary' as AccentRole,
 
   /**
    * 页面背景。

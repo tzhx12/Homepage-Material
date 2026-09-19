@@ -26,8 +26,10 @@ export interface SocialLink {
   label: string;
   /** 点击跳转的地址。支持 mailto: 和 https:// */
   href: string;
-  /** 可选的强调色。填 'primary' / 'secondary' / 'tertiary' 之一，
-   *  不填则统一使用预设配色。 */
+  /**
+   * 可选的强调色覆盖。默认不填 —— 全站共用 theme.config.ts 里
+   * accentRole 指定的同一个角色，保证同类元素颜色一致。
+   */
   accent?: 'primary' | 'secondary' | 'tertiary';
 }
 
@@ -70,13 +72,11 @@ export const profileConfig = {
       icon: 'github',
       label: 'GitHub',
       href: 'https://github.com/tzhx12',
-      accent: 'primary',
     },
     {
       icon: 'mail',
       label: 'Email',
       href: 'mailto:122715481+tzhx12@users.noreply.github.com',
-      accent: 'tertiary',
     },
   ] as SocialLink[],
 } as const;

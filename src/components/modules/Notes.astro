@@ -4,6 +4,7 @@
  */
 import type { NoteItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
+import { ACCENT_CONTAINER, resolveAccent } from '../../lib/accent';
 
 interface Props {
   title?: string;
@@ -13,14 +14,6 @@ interface Props {
 }
 
 const { title = '便签', icon, hint, items } = Astro.props;
-
-const accents = ['primary', 'tertiary', 'secondary'] as const;
-
-const accentClass: Record<string, string> = {
-  primary: 'bg-primary-container text-on-primary-container',
-  tertiary: 'bg-tertiary-container text-on-tertiary-container',
-  secondary: 'bg-secondary-container text-on-secondary-container',
-};
 ---
 
 <section class="reveal">
@@ -28,11 +21,12 @@ const accentClass: Record<string, string> = {
 
   <div class="flex flex-col gap-2.5">
     {
-      items.map((note, index) => (
+      items.map((note) => (
         <div
           class:list={[
             'relative overflow-hidden rounded-3xl px-5 py-4',
-            accentClass[note.accent ?? accents[index % accents.length]],
+            // 统一用同一个颜色角色，单条可用 accent 字段覆盖
+            ACCENT_CONTAINER[resolveAccent(note.accent)],
           ]}
         >
           <span

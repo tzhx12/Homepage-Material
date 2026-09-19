@@ -4,6 +4,7 @@
  */
 import type { FriendItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
+import { ACCENT_CONTAINER, resolveAccent } from '../../lib/accent';
 
 interface Props {
   title?: string;
@@ -45,7 +46,11 @@ const isImage = (src: string) =>
             />
           ) : (
             <span
-              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-container text-lg"
+              class:list={[
+                'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg',
+                // 和其他模块共用同一个强调色角色
+                ACCENT_CONTAINER[resolveAccent(friend.accent)],
+              ]}
               aria-hidden="true"
             >
               {friend.avatar}

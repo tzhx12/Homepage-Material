@@ -5,6 +5,7 @@
  */
 import { profileConfig } from '../../config/profile.config';
 import Icon from '../ui/Icon.astro';
+import { ACCENT_CONTAINER, resolveAccent } from '../../lib/accent';
 
 interface Props {
   showBio?: boolean;
@@ -110,13 +111,9 @@ const avatarIsImage =
                   rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   class:list={[
                     'md-button md-state-layer !px-4 !py-2 !text-xs',
-                    !social.accent && 'md-button-tonal',
+                    // 和全站共用同一个强调色角色，保证一致性
+                    ACCENT_CONTAINER[resolveAccent(social.accent)],
                   ]}
-                  style={
-                    social.accent
-                      ? undefined
-                      : 'background-color:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)'
-                  }
                   data-ripple
                 >
                   <Icon name={social.icon} size={16} />

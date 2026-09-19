@@ -57,6 +57,28 @@ seedColor: '#8ECAE6',   // 天空蓝
 
 不用管对比度——M3 的色调映射会保证前景色和背景色始终成对出现，自动满足可读性要求。
 
+### 为什么图标底色是统一的
+
+同一个模块里的一排图标，底色必须相同。这是 Material You 的硬规则：**同一类元素用同一个颜色角色**。
+
+颜色角色（color role）就像「按数字涂色」里的数字——它是 UI 元素和颜色之间的映射关系，不是随便挑的调色板。Primary 用于最重要的元素，Secondary 用于次要的，Tertiary 用于需要特别强调的小元素。一排图标各用各的角色，看起来就不像同一套系统生成的了。
+
+所以本模板全站只设一个强调色角色，在 `theme.config.ts`：
+
+```ts
+accentRole: 'primary',   // 'primary' 最醒目 / 'secondary' 更含蓄 / 'tertiary' 对比更强
+```
+
+图标底色、便签底色、数字颜色统一由它决定。改这一处，全站一起变，**从结构上保证不会出现同类元素颜色各异**。
+
+确实需要单独强调某一条时，才用 `accent` 字段覆盖：
+
+```ts
+{ label: 'GitHub', href: '...', accent: 'tertiary' }   // 只有这一条换色
+```
+
+模块之间则按 M3 的角色分工使用不同色：特色项目卡用 `primaryContainer`（高强调）、状态徽章用 `tertiaryContainer`（M3 规范指定徽章用 tertiary）、次级按钮用 `secondaryContainer`（规范指定 tonal button 用它）。这不是不一致，而是不同元素类型各司其职。
+
 ### 换背景
 
 `theme.config.ts` 的 `background` 段控制页面背景。默认是「一张图 + Mica 材质」：

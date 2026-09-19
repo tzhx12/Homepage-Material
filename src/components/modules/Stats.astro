@@ -5,6 +5,7 @@
 import type { StatItem } from '../../config/modules.config';
 import SectionHeader from '../ui/SectionHeader.astro';
 import Icon from '../ui/Icon.astro';
+import { ACCENT_TEXT, resolveAccent } from '../../lib/accent';
 
 interface Props {
   title?: string;
@@ -14,8 +15,6 @@ interface Props {
 }
 
 const { title = '数据', icon, hint, items } = Astro.props;
-
-const accentText = ['text-primary', 'text-tertiary', 'text-secondary'];
 ---
 
 <section class="reveal">
@@ -23,7 +22,7 @@ const accentText = ['text-primary', 'text-tertiary', 'text-secondary'];
 
   <div class="md-card grid grid-cols-1 gap-1 p-2 sm:grid-cols-3">
     {
-      items.map((item, index) => (
+      items.map((item) => (
         <div class="flex flex-col items-center gap-1 rounded-3xl px-3 py-5 text-center">
           {item.icon && (
             <span class="mb-1 text-xl leading-none" aria-hidden="true">
@@ -33,7 +32,8 @@ const accentText = ['text-primary', 'text-tertiary', 'text-secondary'];
           <span
             class:list={[
               'text-3xl leading-none font-bold tracking-tight',
-              accentText[index % accentText.length],
+              // 同一类元素共用一个颜色角色
+              ACCENT_TEXT[resolveAccent(item.accent)],
             ]}
           >
             {item.value}
