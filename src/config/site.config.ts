@@ -20,10 +20,13 @@ export const siteConfig = {
 
   /**
    * 站点图标（浏览器标签页上的小图）。
-   * 填 '/文件名' 用 public/ 下的图片，建议 64×64 以内；
-   * 也可以填 emoji，会被转成内联 SVG。
+   * 默认指向 GitHub 头像，**换成你自己的就把用户名替换掉**。
+   *
+   * 也支持：
+   *   '/favicon.png'   用 public/ 下的图片（建议 64×64 以内）
+   *   '🌸'             直接用 emoji，会被转成内联 SVG
    */
-  favicon: '/favicon.png',
+  favicon: 'https://github.com/tzhx12.png?size=64',
 
   /** 页脚版权信息里的署名。 */
   copyright: 'tzhx12',

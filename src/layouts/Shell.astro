@@ -32,8 +32,14 @@ ${Object.entries(radiusTokens[themeConfig.radius])
   .join('\n')}
 }`;
 
-// favicon：填 '/' 开头的路径就直接用；填 emoji 则转成内联 SVG（省一次请求）
-const faviconHref = siteConfig.favicon.startsWith('/')
+// favicon 支持三种写法：'/' 开头的本地路径、http(s) 网络地址，
+// 或 emoji（转成内联 SVG，省一次请求）
+const faviconIsUrl =
+  siteConfig.favicon.startsWith('/') ||
+  siteConfig.favicon.startsWith('http://') ||
+  siteConfig.favicon.startsWith('https://');
+
+const faviconHref = faviconIsUrl
   ? siteConfig.favicon
   : `data:image/svg+xml,${encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${siteConfig.favicon}</text></svg>`

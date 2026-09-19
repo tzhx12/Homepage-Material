@@ -38,18 +38,24 @@ export const profileConfig = {
   name: 'tzhx12',
 
   /**
-   * 头像。当前用的是从 GitHub 头像下载到本地的 public/avatar.png，
-   * 顶部栏也会拿它当站点标识，所以换这一处就够了。
+   * 头像。顶部栏也会拿它当站点标识，所以换这一处就够了。
    *
-   * 三种写法：
-   *   '/自己的图片.png'   放进 public/ 目录
-   *   'https://...'       直接用网络图片
-   *   '🐣'                直接用 emoji
+   * 默认直接引用 GitHub 头像，仓库里不存任何图片文件。
+   * **换成你自己的：把下面的用户名替换掉即可**
+   *   https://github.com/<你的用户名>.png
    *
-   * 也可以直接引用 GitHub 头像地址（https://github.com/<用户名>.png）：
-   * 好处是换了 GitHub 头像这边自动跟着变，代价是每次访问多一次外部请求。
+   * 三种写法都支持：
+   *   'https://github.com/你的用户名.png'  GitHub 头像，换头像时自动跟着变
+   *   '/自己的图片.png'                    放进 public/ 目录，不依赖外部服务
+   *   '🐣'                                 直接用 emoji
+   *
+   * 注：上面的地址会 302 跳到 avatars.githubusercontent.com。
+   * 如果访问者所在网络连不上 github.com（国内偶尔会有），头像会加载失败。
+   * 那种情况下改用头像 CDN 的直链更稳，它不经过 github.com：
+   *   https://avatars.githubusercontent.com/u/你的数字ID?v=4
+   * （数字 ID 在 https://api.github.com/users/你的用户名 里的 id 字段）
    */
-  avatar: '/avatar.png',
+  avatar: 'https://github.com/tzhx12.png?size=240',
 
   /** 一句话签名，显示在名字下方。 */
   tagline: '写点代码，做点喜欢的东西。',
