@@ -352,20 +352,52 @@
 }
 
 /* ------------------------------------------------------------
- * 背景光斑：可爱风的主要来源
- * 用 primary / tertiary / secondary 的容器色做柔和径向渐变
+ * 页面背景
+ *
+ * 层次自下而上：
+ *   .md-backdrop  背景图（模糊后）
+ *   .md-mesh      纯 CSS 光斑（仅 mesh 模式用）
+ *   .md-mica      覆盖层：跟随主题色的半透明材质
+ *
+ * 这就是 Mica 的思路——把壁纸重度模糊，再压一层带主题色的薄纱，
+ * 内容浮在上面。既留住图片的氛围，又不牺牲文字可读性。
  * ---------------------------------------------------------- */
-.md-mesh {
+.md-backdrop {
+  position: fixed;
+  /* 向外扩一圈，避免模糊把边缘吃掉露出空白 */
+  inset: -8%;
+  z-index: -3;
+  pointer-events: none;
+  background-image: var(--md-backdrop-image);
+  background-size: cover;
+  background-position: center;
+  /* will-change 把它提升为独立图层，模糊只需光栅化一次 */
+  will-change: transform;
+  filter: blur(var(--md-backdrop-blur, 64px));
+}
+
+.md-mica {
   position: fixed;
   inset: 0;
   z-index: -1;
+  pointer-events: none;
+  background-color: var(--md-sys-color-surface);
+  opacity: var(--md-mica-opacity, 0.86);
+  transition: background-color var(--md-sys-motion-duration-medium)
+    var(--md-sys-motion-easing-standard);
+}
+
+/* 光斑模式：用径向渐变本身的柔和衰减做出光晕，不用 filter: blur()。
+   大尺寸 + blur 会让浏览器每帧重算模糊，掉帧也拖慢渲染；
+   多层色标的径向渐变几乎零成本，观感基本一致。 */
+.md-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
   overflow: hidden;
   pointer-events: none;
 }
 
-/* 用径向渐变本身的柔和衰减做出光晕，不用 filter: blur()。
-   大尺寸 + blur 会让浏览器每帧重新计算模糊，掉帧也拖慢截图；
-   多层色标的径向渐变几乎零成本，观感基本一致。 */
 .md-mesh::before,
 .md-mesh::after {
   content: '';
@@ -401,6 +433,32 @@
     transparent 100%
   );
   animation: md-float-b 32s ease-in-out infinite;
+}
+
+/* 半透明卡片：Mica 观感的另一半。
+   卡片透出一点背景，内容才像浮在材质上，而不是贴在纯色块上。 */
+:root[data-cards='translucent'] .md-card {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-container-low) 74%,
+    transparent
+  );
+  backdrop-filter: blur(var(--md-card-blur, 20px)) saturate(1.5);
+  -webkit-backdrop-filter: blur(var(--md-card-blur, 20px)) saturate(1.5);
+}
+
+:root[data-cards='translucent'] .md-card-interactive:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-container-high) 84%,
+    transparent
+  );
+}
+
+/* 关掉卡片模糊时移除 backdrop-filter，省一层合成开销 */
+:root[data-card-blur='off'] .md-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 @keyframes md-float-a {

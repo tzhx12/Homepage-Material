@@ -3,11 +3,11 @@
  */
 
 export const siteConfig = {
-  /** 浏览器标签页标题，也会用于页脚版权信息。 */
+  /** 浏览器标签页标题，也会用于页脚版权信息和顶部栏。 */
   title: 'tzhx12 的小站',
 
-  /** 站点副标题，显示在标题旁边或下方。 */
-  subtitle: '一个还在长大的个人主页',
+  /** 站点副标题。留空则不显示。 */
+  subtitle: '写点代码，做点喜欢的东西',
 
   /** 用于搜索引擎和社交分享的描述。 */
   description: 'Material You 风格的个人主页，记录我自己、我的项目和喜欢的东西。',
@@ -19,10 +19,11 @@ export const siteConfig = {
   keywords: ['个人主页', 'Material You', 'Astro'],
 
   /**
-   * 站点图标。可以填 emoji（最简单），
-   * 也可以填 public/ 目录下的文件路径，如 '/favicon.svg'。
+   * 站点图标（浏览器标签页上的小图）。
+   * 填 '/文件名' 用 public/ 下的图片，建议 64×64 以内；
+   * 也可以填 emoji，会被转成内联 SVG。
    */
-  favicon: '🌸',
+  favicon: '/favicon.png',
 
   /** 页脚版权信息里的署名。 */
   copyright: 'tzhx12',

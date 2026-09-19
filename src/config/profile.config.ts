@@ -36,12 +36,18 @@ export const profileConfig = {
   name: 'tzhx12',
 
   /**
-   * 头像。三种写法：
-   *   '/avatar.svg'                  放 public/ 目录下的图片
-   *   'https://...'                  网络图片
-   *   '🐣'                           直接用 emoji 当头像
+   * 头像。当前用的是从 GitHub 头像下载到本地的 public/avatar.png，
+   * 顶部栏也会拿它当站点标识，所以换这一处就够了。
+   *
+   * 三种写法：
+   *   '/自己的图片.png'   放进 public/ 目录
+   *   'https://...'       直接用网络图片
+   *   '🐣'                直接用 emoji
+   *
+   * 也可以直接引用 GitHub 头像地址（https://github.com/<用户名>.png）：
+   * 好处是换了 GitHub 头像这边自动跟着变，代价是每次访问多一次外部请求。
    */
-  avatar: '/avatar.svg',
+  avatar: '/avatar.png',
 
   /** 一句话签名，显示在名字下方。 */
   tagline: '写点代码，做点喜欢的东西。',

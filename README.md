@@ -7,9 +7,10 @@
 ## 特性
 
 - **Material You 动态取色**：改一个十六进制种子色，46 个 M3 颜色角色（primary / secondary / tertiary / error / 五级 surface container / outline / fixed 系列…）全部自动重算，明暗两套齐全。用的是 Google 官方的 HCT 算法，和 Android 12+ 从壁纸取色是同一套实现。
-- **模块化配置**：增删模块 = 在数组里增删一项。九个内置模块：个人名片、链接、项目、技能、时间线、友链、数据、便签、图片墙。
+- **模块化配置**：增删模块 = 在数组里增删一项。九个内置模块：个人名片、链接、项目、技能、时间线、友链、数据统计、随笔、相册。
+- **Mica 材质背景**：背景图重度模糊 + 一层跟随主题色的半透明覆盖层，卡片做成半透明浮在材质上。覆盖层不透明度可调，换背景图不会打乱整站配色。不想要图片也可以切成纯 CSS 光斑或纯色。
 - **深色模式**：跟随系统，也可手动锁定浅色 / 深色，切换结果存在本地，且绘制前就应用好，不会闪白。
-- **可爱风格**：柔和粉调、大圆角、背景光斑、星星闪烁、头像旋转光环、点击涟漪、悬停上浮。
+- **可爱风格**：大圆角、星星闪烁、头像旋转光环、点击涟漪、悬停上浮。
 - **纯静态**：构建产物是纯 HTML/CSS/JS，可以托管在任何静态空间，运行时零外部请求。
 - **性能与无障碍**：颜色零运行时开销（全部构建时算好）、尊重系统「减少动态效果」设置、禁用 JS 时内容依然完整可读、键盘焦点可见、语义化标签。
 
@@ -31,7 +32,7 @@ npm run preview  # 预览构建结果
 | 文件 | 管什么 |
 | --- | --- |
 | `site.config.ts` | 站点标题、描述、语言、图标、页脚 |
-| `theme.config.ts` | **配色种子色**、圆角、动效开关、背景光斑 |
+| `theme.config.ts` | **配色种子色**、圆角、动效开关、**背景与 Mica 材质** |
 | `profile.config.ts` | 头像、昵称、签名、简介、社交链接 |
 | `modules.config.ts` | **页面上有哪些模块、什么顺序、各自内容** |
 
@@ -40,21 +41,65 @@ npm run preview  # 预览构建结果
 打开 `theme.config.ts`，改这一行就够了：
 
 ```ts
-seedColor: '#FF8FB1',   // 樱花粉
+seedColor: '#8ECAE6',   // 天空蓝
 ```
 
-一些适合可爱风格的参考值：
+一些参考值：
 
 | 颜色 | 值 |
 | --- | --- |
-| 樱花粉（默认） | `#FF8FB1` |
+| 天空蓝（默认） | `#8ECAE6` |
+| 樱花粉 | `#FF8FB1` |
 | 薰衣草紫 | `#B39DDB` |
-| 天空蓝 | `#8ECAE6` |
 | 蜜桃橘 | `#FFB4A2` |
 | 抹茶绿 | `#A8D8B9` |
 | 草莓奶昔 | `#F4A6C0` |
 
 不用管对比度——M3 的色调映射会保证前景色和背景色始终成对出现，自动满足可读性要求。
+
+### 换背景
+
+`theme.config.ts` 的 `background` 段控制页面背景。默认是「一张图 + Mica 材质」：
+
+```ts
+background: {
+  mode: 'image',          // 'image' 图片 / 'mesh' 纯 CSS 光斑 / 'plain' 纯色
+  image: '/background.jpg',
+  blur: 40,               // 背景模糊半径，Mica 的关键就在这一步
+  overlayOpacity: 0.8,    // 覆盖层不透明度，最影响可读性的一个值
+  translucentCards: true, // 卡片半透明，Mica 观感的另一半
+  cardBlur: 0,            // 卡片再模糊一次，通常不需要
+}
+```
+
+Mica 是 Windows 11 引入的材质：把壁纸重度模糊，再压一层跟随主题色的薄纱，内容浮在上面。因为覆盖层用的是主题色，**换背景图不会打乱整站配色**——背景只提供质感，色调依然由 `seedColor` 说了算。
+
+换自己的背景图：把图片放进 `public/`，改 `image` 那一行。建议宽度 1600px 左右、控制在 500KB 以内。原图太大可以用 ffmpeg 处理：
+
+```bash
+ffmpeg -i 原图.jpg -vf "scale=1600:-2" -q:v 4 public/background.jpg
+```
+
+调背景明显程度的主旋钮是 `overlayOpacity`：`0.95` 背景几乎只剩一层色调，`0.6` 以下会很抢眼。**文字看不清就把它往上调**。
+
+不想用图片的话，`mode: 'mesh'` 会用几个跟随主题色的柔和光斑当背景（零图片开销），`mode: 'plain'` 则是纯色。
+
+### 加自己的图片
+
+除了背景图，还有两个地方可以放图片：
+
+- **相册模块**：图片放进 `public/images/`，然后在 `modules.config.ts` 的 `gallery` 模块里按 `{ src: '/images/xxx.jpg', alt: '描述', caption: '图注' }` 添加。图片会自动裁成 4:3，带悬停放大效果。
+- **头像**：见 `profile.config.ts` 的 `avatar`，支持本地图片、网络地址或 emoji。它同时被顶部栏当作站点标识，所以换一处就够了。
+
+### 从图片取色
+
+想让配色贴合某张图，可以取它的主色当 `seedColor`：
+
+```bash
+magick 图片.jpg -resize 1x1 -format "%[hex:p{0,0}]" info:   # 需要 ImageMagick
+```
+
+把那串十六进制填进 `seedColor`，整套配色就会向这张图的色调靠拢。选图时也可以反过来——先定主题色，再挑色调接近的图，这样 Mica 覆盖层和图片不会互相打架。
 
 ### 增删模块
 
@@ -184,23 +229,29 @@ export default defineConfig({
 ## 目录结构
 
 ```
+public/                  ★ 放图片资源
+├── avatar.png               头像（同时用作顶部栏标识）
+├── favicon.png              浏览器标签页图标
+├── background.jpg           页面背景图
+└── images/                  相册等自用图片放这里
+
 src/
 ├── config/              ★ 你要改的就是这里
 │   ├── site.config.ts       站点信息
-│   ├── theme.config.ts      配色、圆角、动效
+│   ├── theme.config.ts      配色、背景与 Mica、圆角、动效
 │   ├── profile.config.ts    个人信息
 │   └── modules.config.ts    模块编排
 ├── lib/
 │   └── m3.ts            Material You 色彩引擎（种子色 → 46 个颜色角色）
 ├── styles/
-│   ├── global.css       M3 设计令牌、基础样式、组件原语
+│   ├── global.css       M3 设计令牌、背景层、组件原语
 │   └── animations.css   入场与装饰动效
 ├── components/
 │   ├── ui/              基础组件：Icon、Card、Chip、SectionHeader
 │   ├── layout/          TopBar、Footer
 │   └── modules/         九个功能模块
 ├── layouts/
-│   └── Shell.astro      页面外壳，注入配色变量与主题脚本
+│   └── Shell.astro      页面外壳，注入配色变量、Mica 变量与主题脚本
 └── pages/
     ├── index.astro      首页，按配置渲染模块
     └── 404.astro        404 页
@@ -214,6 +265,7 @@ src/
 - **层级用表面色而不是阴影**。Material You 用 `surface-container-low` 到 `surface-container-highest` 五级色阶表达层次，阴影只作点缀，这是它和传统卡片设计最明显的区别。
 - **入场动画只在 JS 可用时生效**（`.reveal` 前面挂了 `[data-js='on']`）。否则脚本一旦加载失败，`opacity: 0` 会让整页变成空白——这是很多模板都踩过的坑。
 - **背景光斑用径向渐变而不是 `filter: blur()`**。大尺寸元素叠加模糊会让浏览器每帧重算，低端设备明显掉帧；多层色标的径向渐变观感几乎一致但几乎零成本。
+- **卡片的 `backdrop-filter` 默认关掉**（`cardBlur: 0`）。背景图已经被模糊过一道，再给每张卡片叠一层背景模糊，视觉上几乎看不出差别，却让每张卡片各做一次合成——卡片一多就掉帧，实测还会导致部分内容绘制不出来。只有在把背景 `blur` 调得很小时这个值才有意义。
 - **卡片里不嵌套 `<a>`**。项目卡片用「拉伸链接」：标题上的 `<a>` 用伪元素铺满整张卡，让整块可点，同时内部的其他链接靠 `z-index` 浮在上层。
 
 ## 许可

@@ -151,9 +151,8 @@ export const modules: ModuleConfig[] = [
 
   {
     type: 'links',
-    title: '找到我',
-    icon: '🔗',
-    hint: '这些地方都能联系到我',
+    title: '联系方式',
+    hint: '这些地方都能找到我',
     width: 'half',
     items: [
       {
@@ -171,7 +170,7 @@ export const modules: ModuleConfig[] = [
         accent: 'tertiary',
       },
       {
-        icon: '📄',
+        icon: 'link',
         label: '简历',
         description: '我的经历',
         href: '#',
@@ -182,20 +181,18 @@ export const modules: ModuleConfig[] = [
 
   {
     type: 'stats',
-    title: '一些数字',
-    icon: '📊',
+    title: '数据统计',
     width: 'half',
     items: [
-      { label: '公开仓库', value: '2', suffix: '个', icon: '📦' },
-      { label: '写过的代码', value: '∞', suffix: '', icon: '⌨️' },
-      { label: '入坑年数', value: '1', suffix: '年', icon: '🌱' },
+      { label: '公开仓库', value: '2', suffix: '个' },
+      { label: '写过的代码', value: '∞' },
+      { label: '入坑年数', value: '1', suffix: '年' },
     ],
   },
 
   {
     type: 'projects',
     title: '我的项目',
-    icon: '🧩',
     hint: '做出来给世界看的东西',
     width: 'full',
     items: [
@@ -205,15 +202,14 @@ export const modules: ModuleConfig[] = [
           '就是你正在看的这个页面。Material You 配色由单个种子色推导，模块通过配置文件自由编排。',
         href: 'https://github.com/tzhx12/Homepage-Material',
         repo: 'https://github.com/tzhx12/Homepage-Material',
-        icon: '🌸',
         tags: ['Astro', 'Tailwind CSS', 'Material You'],
         status: '进行中',
         featured: true,
       },
       {
         name: '下一个项目',
-        description: '这里还空着，等一个想做的点子。把 modules.config.ts 里这段换成你自己的项目就行。',
-        icon: '✨',
+        description:
+          '这里还空着，等一个想做的点子。把 modules.config.ts 里这段换成你自己的项目就行。',
         tags: ['待添加'],
       },
     ],
@@ -222,7 +218,6 @@ export const modules: ModuleConfig[] = [
   {
     type: 'skills',
     title: '技能',
-    icon: '🛠️',
     width: 'half',
     groups: [
       {
@@ -236,36 +231,35 @@ export const modules: ModuleConfig[] = [
       },
       {
         category: '在学',
-        items: [{ name: 'TypeScript', level: 2 }, { name: 'Astro', level: 2 }],
+        items: [
+          { name: 'TypeScript', level: 2 },
+          { name: 'Astro', level: 2 },
+        ],
       },
     ],
   },
 
   {
     type: 'timeline',
-    title: '一路走来',
-    icon: '🌱',
+    title: '我的经历',
     width: 'half',
     items: [
       {
         date: '2026.09',
         title: '建了第一个 GitHub 仓库',
         description: '从这里开始。',
-        icon: '🎉',
       },
       {
         date: '未来',
         title: '做更多喜欢的东西',
         description: '这一段留给你自己填。',
-        icon: '🚀',
       },
     ],
   },
 
   {
     type: 'notes',
-    title: '碎碎念',
-    icon: '💭',
+    title: '随笔',
     width: 'half',
     items: [
       {
@@ -278,14 +272,13 @@ export const modules: ModuleConfig[] = [
 
   {
     type: 'friends',
-    title: '朋友们',
-    icon: '🫧',
+    title: '友链',
     hint: '有趣的灵魂',
     width: 'half',
     items: [
       {
         name: '你的朋友',
-        avatar: '🐱',
+        avatar: '/images/illustration-03.jpg',
         description: '把这里换成朋友的站点',
         href: '#',
       },
@@ -294,14 +287,26 @@ export const modules: ModuleConfig[] = [
 
   {
     type: 'gallery',
-    title: '喜欢的东西',
-    icon: '🖼️',
+    title: '相册',
+    hint: '图片放在 public/images/ 目录下',
     width: 'full',
     columns: 3,
     items: [
-      { src: '🌸', alt: '樱花', caption: '春天的粉色' },
-      { src: '🌙', alt: '月亮', caption: '安静的夜' },
-      { src: '☕', alt: '咖啡', caption: '写代码的搭档' },
+      {
+        src: '/images/illustration-01.jpg',
+        alt: '插画',
+        caption: '角色插画',
+      },
+      {
+        src: '/images/illustration-02.jpg',
+        alt: '插画',
+        caption: '樱花与远山',
+      },
+      {
+        src: '/images/illustration-03.jpg',
+        alt: '插画',
+        caption: '晴空',
+      },
     ],
   },
 ];

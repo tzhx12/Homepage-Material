@@ -4,8 +4,17 @@
  * 半透明毛玻璃并浮起，用状态变化提示「页面已经滚动了」。
  */
 import { siteConfig } from '../../config/site.config';
+import { profileConfig } from '../../config/profile.config';
 import { themeConfig } from '../../config/theme.config';
 import Icon from '../ui/Icon.astro';
+
+// 站点标识直接用头像。头像可以是图片路径、网络地址或 emoji。
+const logo = profileConfig.avatar;
+const logoIsImage =
+  logo.startsWith('/') ||
+  logo.startsWith('http://') ||
+  logo.startsWith('https://') ||
+  logo.startsWith('data:');
 ---
 
 <header
@@ -15,12 +24,28 @@ import Icon from '../ui/Icon.astro';
   <div class="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
     <a
       href="/"
-      class="md-state-layer flex items-center gap-2 rounded-full px-3 py-2 font-bold text-on-surface"
+      class="md-state-layer flex items-center gap-2.5 rounded-full py-1.5 pr-3.5 pl-1.5 font-bold text-on-surface"
       data-ripple
     >
-      <span class="text-lg leading-none" aria-hidden="true">
-        <Icon name={siteConfig.favicon} size={22} />
-      </span>
+      {
+        logoIsImage ? (
+          <img
+            src={logo}
+            alt=""
+            width="26"
+            height="26"
+            class="h-[26px] w-[26px] shrink-0 rounded-full object-cover ring-2 ring-outline-variant"
+            aria-hidden="true"
+          />
+        ) : (
+          <span
+            class="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full bg-primary-container text-sm leading-none"
+            aria-hidden="true"
+          >
+            <Icon name={logo} size={16} />
+          </span>
+        )
+      }
       <span class="text-base tracking-tight">{siteConfig.title}</span>
     </a>
 

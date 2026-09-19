@@ -32,12 +32,21 @@ ${Object.entries(radiusTokens[themeConfig.radius])
   .join('\n')}
 }`;
 
-// favicon：emoji 转成内联 SVG，省一次请求
+// favicon：填 '/' 开头的路径就直接用；填 emoji 则转成内联 SVG（省一次请求）
 const faviconHref = siteConfig.favicon.startsWith('/')
   ? siteConfig.favicon
   : `data:image/svg+xml,${encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${siteConfig.favicon}</text></svg>`
     )}`;
+
+// 背景相关的运行时变量
+const bg = themeConfig.background;
+const backgroundCss = `:root {
+  --md-backdrop-image: url('${bg.image}');
+  --md-backdrop-blur: ${bg.blur}px;
+  --md-mica-opacity: ${bg.overlayOpacity};
+  --md-card-blur: ${bg.cardBlur}px;
+}`;
 
 const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
 const pageDescription = description ?? siteConfig.description;
@@ -48,6 +57,10 @@ const pageDescription = description ?? siteConfig.description;
   lang={siteConfig.lang}
   data-motion={themeConfig.motion ? 'on' : 'off'}
   data-hover-lift={themeConfig.hoverLift ? 'on' : 'off'}
+  data-cards={bg.translucentCards && bg.mode === 'image'
+    ? 'translucent'
+    : 'solid'}
+  data-card-blur={bg.cardBlur > 0 ? 'on' : 'off'}
 >
   <head>
     <meta charset="utf-8" />
@@ -97,11 +110,22 @@ const pageDescription = description ?? siteConfig.description;
     <style is:global set:html={m3.css} />
     <!-- 由圆角配置推导的形状变量 -->
     <style is:global set:html={shapeCss} />
+    <!-- 由背景配置推导的 Mica 变量 -->
+    <style is:global set:html={backgroundCss} />
   </head>
 
   <body class="min-h-dvh antialiased">
-    <!-- 背景光斑。关掉 backgroundMesh 就只剩纯色背景 -->
-    {themeConfig.backgroundMesh && <div class="md-mesh" aria-hidden="true"></div>}
+    <!--
+      背景三层，从下往上：图片 → 光斑 → Mica 覆盖层。
+      都由 theme.config.ts 的 background 段控制。
+    -->
+    {
+      bg.mode === 'image' && (
+        <div class="md-backdrop" aria-hidden="true" />
+      )
+    }
+    {bg.mode === 'mesh' && <div class="md-mesh" aria-hidden="true" />}
+    {bg.mode !== 'plain' && <div class="md-mica" aria-hidden="true" />}
 
     <a
       href="#main"
