@@ -2,10 +2,13 @@
 
 一个 Material You 风格的静态个人主页模板。配色由**单个种子色**自动推导，页面由**配置文件**自由编排，视觉偏可爱 / 二次元。
 
+**技术栈**：[Astro](https://astro.build)（静态站点框架）+ [Tailwind CSS](https://tailwindcss.com)（样式）+ [`@material/material-color-utilities`](https://github.com/material-foundation/material-color-utilities)（Google 官方 HCT 取色算法）。没有引入任何 UI 框架，构建产物是纯 HTML / CSS / JS。
+
 > 参考了静态博客模板 [fuwari](https://github.com/saicaca/fuwari) 的技术选型（Astro + Tailwind CSS）与做工水准，但形态完全不同：fuwari 是博客（文章、归档、分类、标签、RSS），本项目是**个人主页**——没有文章概念，换成一套可插拔的模块系统。
 
 ## 特性
 
+- **技术栈精简**：Astro + Tailwind CSS，直接依赖只有四个包。没有 UI 框架、没有运行时，构建产物是纯 HTML / CSS / JS，可以托管在任何静态空间。
 - **Material You 动态取色**：改一个十六进制种子色，46 个 M3 颜色角色（primary / secondary / tertiary / error / 五级 surface container / outline / fixed 系列…）全部自动重算，明暗两套齐全。用的是 Google 官方的 HCT 算法，和 Android 12+ 从壁纸取色是同一套实现。
 - **模块化配置**：增删模块 = 在数组里增删一项。九个内置模块：个人名片、链接、项目、技能、时间线、友链、数据统计、随笔、相册。
 - **Mica 材质背景（可选）**：用自己的图片做背景，重度模糊后压一层跟随主题色的半透明覆盖层，卡片做成半透明浮在材质上。默认不启用（纯 CSS 光斑，零图片资源），放进自己的图即可开启。

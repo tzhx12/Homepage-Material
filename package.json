@@ -2,7 +2,20 @@
   "name": "homepage-material",
   "type": "module",
   "version": "1.0.0",
-  "description": "Material You 风格的静态个人主页模板，模块化配置驱动",
+  "description": "Material You 风格的静态个人主页模板，基于 Astro + Tailwind CSS，模块化配置驱动",
+  "license": "MIT",
+  "keywords": [
+    "astro",
+    "astro-theme",
+    "tailwindcss",
+    "material-you",
+    "material-design-3",
+    "personal-homepage",
+    "homepage-template",
+    "static-site",
+    "dark-mode",
+    "template"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
