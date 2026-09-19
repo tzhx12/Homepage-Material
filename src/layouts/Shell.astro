@@ -39,13 +39,14 @@ const faviconHref = siteConfig.favicon.startsWith('/')
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${siteConfig.favicon}</text></svg>`
     )}`;
 
-// 背景相关的运行时变量
+// 背景相关的运行时变量。不使用图片背景时就不注入图片路径，
+// 避免在样式里留下一个指向不存在文件的悬空引用。
 const bg = themeConfig.background;
 const backgroundCss = `:root {
-  --md-backdrop-image: url('${bg.image}');
   --md-backdrop-blur: ${bg.blur}px;
   --md-mica-opacity: ${bg.overlayOpacity};
   --md-card-blur: ${bg.cardBlur}px;
+${bg.mode === 'image' ? `  --md-backdrop-image: url('${bg.image}');` : ''}
 }`;
 
 const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
@@ -116,16 +117,20 @@ const pageDescription = description ?? siteConfig.description;
 
   <body class="min-h-dvh antialiased">
     <!--
-      背景三层，从下往上：图片 → 光斑 → Mica 覆盖层。
-      都由 theme.config.ts 的 background 段控制。
+      背景层，由 theme.config.ts 的 background.mode 决定：
+        image  图片层 + Mica 覆盖层（覆盖层用主题色压住图片，保证可读性）
+        mesh   纯 CSS 光斑，不需要图片，也就不需要覆盖层
+        plain  什么都不加
     -->
     {
       bg.mode === 'image' && (
-        <div class="md-backdrop" aria-hidden="true" />
+        <>
+          <div class="md-backdrop" aria-hidden="true" />
+          <div class="md-mica" aria-hidden="true" />
+        </>
       )
     }
     {bg.mode === 'mesh' && <div class="md-mesh" aria-hidden="true" />}
-    {bg.mode !== 'plain' && <div class="md-mica" aria-hidden="true" />}
 
     <a
       href="#main"

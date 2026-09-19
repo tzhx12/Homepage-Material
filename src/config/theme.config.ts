@@ -14,8 +14,8 @@ export type AccentRole = 'primary' | 'secondary' | 'tertiary';
 
 /**
  * 页面背景的三种形态：
- *   'image'  图片背景 + Mica 材质覆盖层（默认）
- *   'mesh'   纯 CSS 的柔和光斑，不需要任何图片
+ *   'mesh'   纯 CSS 的柔和光斑，不需要任何图片（默认）
+ *   'image'  图片背景 + Mica 材质覆盖层
  *   'plain'  纯色，最省事也最快
  */
 export type BackgroundMode = 'image' | 'mesh' | 'plain';
@@ -78,11 +78,25 @@ export const themeConfig = {
    *   背景图 → 模糊 → 覆盖层（surface 色 × overlayOpacity）→ 内容
    */
   background: {
-    mode: 'image' as BackgroundMode,
+    /**
+     * 背景形态，三选一：
+     *   'mesh'   纯 CSS 的柔和光斑（默认，不需要任何图片）
+     *   'image'  图片背景 + Mica 材质，需要你自己提供图片
+     *   'plain'  纯色，最省事也最快
+     */
+    mode: 'mesh' as BackgroundMode,
 
     /**
-     * 背景图。放在 public/ 目录下，用 '/文件名' 引用；也可以直接填网络地址。
-     * 换图只需改这一行。想用自己图片的话，建议宽度 1600px 左右、控制在 500KB 以内。
+     * 背景图，仅当 mode 为 'image' 时生效。
+     *
+     * 仓库里没有附带背景图 —— 请用自己的图，放进 public/ 目录后
+     * 把这里改成对应文件名（例如 '/my-background.jpg'）。
+     *
+     * 建议宽度 1600px 左右、控制在 500KB 以内，原图太大可以压缩：
+     *   ffmpeg -i 原图.jpg -vf "scale=1600:-2" -q:v 4 public/背景图.jpg
+     *
+     * 注意：只放你自己拥有版权的图片。来源不明的图（尤其是动漫
+     * 同人作品）不要提交到公开仓库。
      */
     image: '/background.jpg',
 

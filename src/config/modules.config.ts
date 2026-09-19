@@ -101,7 +101,10 @@ export interface NoteItem {
 }
 
 export interface GalleryItem {
-  /** 图片地址：public/ 下的路径或网络 URL。 */
+  /**
+   * 图片地址：public/ 下的路径（如 '/images/photo.jpg'）或网络 URL。
+   * 还没准备好图时可以直接写 emoji 当占位，版式先定下来。
+   */
   src: string;
   alt: string;
   caption?: string;
@@ -283,7 +286,7 @@ export const modules: ModuleConfig[] = [
     items: [
       {
         name: '你的朋友',
-        avatar: '/images/illustration-03.jpg',
+        avatar: '🐱',
         description: '把这里换成朋友的站点',
         href: '#',
       },
@@ -293,25 +296,15 @@ export const modules: ModuleConfig[] = [
   {
     type: 'gallery',
     title: '相册',
-    hint: '图片放在 public/images/ 目录下',
+    hint: '图片放进 public/images/ 后在这里引用',
     width: 'full',
     columns: 3,
     items: [
-      {
-        src: '/images/illustration-01.jpg',
-        alt: '插画',
-        caption: '角色插画',
-      },
-      {
-        src: '/images/illustration-02.jpg',
-        alt: '插画',
-        caption: '樱花与远山',
-      },
-      {
-        src: '/images/illustration-03.jpg',
-        alt: '插画',
-        caption: '晴空',
-      },
+      // src 填图片路径（如 '/images/photo.jpg'）或 emoji 占位。
+      // 仓库里没有附带任何图片，请换成你自己的。
+      { src: '🌸', alt: '占位图一', caption: '换成你自己的图片' },
+      { src: '🌙', alt: '占位图二', caption: '换成你自己的图片' },
+      { src: '☕', alt: '占位图三', caption: '换成你自己的图片' },
     ],
   },
 ];
