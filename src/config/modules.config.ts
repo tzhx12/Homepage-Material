@@ -203,8 +203,8 @@ export const modules: ModuleConfig[] = [
         name: '个人主页',
         description:
           '就是你正在看的这个页面。Material You 配色由单个种子色推导，模块通过配置文件自由编排。',
-        href: 'https://github.com/tzhx12/hello-world',
-        repo: 'https://github.com/tzhx12/hello-world',
+        href: 'https://github.com/tzhx12/Homepage-Material',
+        repo: 'https://github.com/tzhx12/Homepage-Material',
         icon: '🌸',
         tags: ['Astro', 'Tailwind CSS', 'Material You'],
         status: '进行中',

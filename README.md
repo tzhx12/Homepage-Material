@@ -165,12 +165,12 @@ export default defineConfig({
 });
 ```
 
-如果仓库用别的名字（比如 `homepage`），网址会带一层路径，需要额外加 `base`：
+如果仓库用别的名字（比如本项目的 `Homepage-Material`），网址会带一层路径，需要额外加 `base`：
 
 ```js
 export default defineConfig({
   site: 'https://<用户名>.github.io',
-  base: '/homepage',
+  base: '/Homepage-Material',
   // ...
 });
 ```
