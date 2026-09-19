@@ -1,12 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="默认头像">
+  <!--
+    占位头像。刻意使用中性配色（暖棕发色 + 奶油肤色 + 中性底色），
+    这样换成任何种子色都不会与页面主题冲突。
+    想换成自己的形象：替换本文件，或在 profile.config.ts 里
+    把 avatar 指向别的图片，也可以直接写一个 emoji。
+  -->
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FFD9E1"/>
-      <stop offset="1" stop-color="#F2C4D8"/>
+      <stop offset="0" stop-color="#F4F1F3"/>
+      <stop offset="1" stop-color="#E4DFE4"/>
     </linearGradient>
     <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#8E5A6E"/>
-      <stop offset="1" stop-color="#6E4256"/>
+      <stop offset="0" stop-color="#7A5F6A"/>
+      <stop offset="1" stop-color="#5E4651"/>
     </linearGradient>
   </defs>
 
@@ -27,13 +33,13 @@
   <circle cx="102" cy="124" r="3.2" fill="#FFFFFF"/>
   <circle cx="144" cy="124" r="3.2" fill="#FFFFFF"/>
 
-  <!-- 腮红 -->
-  <ellipse cx="86" cy="146" rx="11" ry="7" fill="#FFB3C7" opacity="0.75"/>
-  <ellipse cx="154" cy="146" rx="11" ry="7" fill="#FFB3C7" opacity="0.75"/>
+  <!-- 腮红：肤色自带的血色，保留淡粉但压低饱和度 -->
+  <ellipse cx="86" cy="146" rx="11" ry="7" fill="#E8AEB8" opacity="0.55"/>
+  <ellipse cx="154" cy="146" rx="11" ry="7" fill="#E8AEB8" opacity="0.55"/>
 
   <!-- 嘴 -->
   <path d="M113 152c3 4 11 4 14 0" stroke="#3E2A33" stroke-width="3" stroke-linecap="round" fill="none"/>
 
   <!-- 呆毛 -->
-  <path d="M120 68c-2-10 4-16 12-18-6 6-6 12-4 18z" fill="#8E5A6E"/>
+  <path d="M120 68c-2-10 4-16 12-18-6 6-6 12-4 18z" fill="#7A5F6A"/>
 </svg>

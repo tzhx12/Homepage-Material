@@ -21,7 +21,7 @@ export const themeConfig = {
    *   '#A8D8B9'  抹茶绿
    *   '#F4A6C0'  草莓奶昔
    */
-  seedColor: '#FF8FB1',
+  seedColor: '#8ECAE6',
 
   /** 首次访问时的主题。auto 表示跟随系统设置。 */
   defaultMode: 'auto' as ThemeMode,
